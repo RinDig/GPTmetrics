@@ -2,6 +2,8 @@
 
 A computational social science research project investigating how different AI language models respond to standardized political and moral survey questions across various ideological perspectives.
 
+![Series Graph MFQ](https://github.com/user-attachments/assets/e5f14f85-e6dd-436f-9b60-111dc50fd33f)
+
 ## Project Overview
 
 This research systematically analyzes how Large Language Models (LLMs) interpret and respond to political and moral questions when prompted with different ideological perspectives. By using standardized psychometric scales and deliberate prompt engineering, we explore AI moral foundations and potential political biases.

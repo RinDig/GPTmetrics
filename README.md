@@ -1,6 +1,8 @@
 # The Ethics Engine: Measuring Moral and Ideological Bias in LLMs
 
-This repository hosts a **modular pipeline** to detect, measure, and visualize **moral** and **ideological** biases in Large Language Models (LLMs). It aligns with the concepts in the dissertation “The Ethics Engine: Building a Modular Pipeline to Uncover AI Bias and Moral Alignments.” You can use it to run **direct (questionnaire-based)** tests and **indirect (embedding-based)** checks, helping you see how models respond to various scales and prompts.
+This repository hosts a **modular pipeline** to detect, measure, and visualize **moral** and **ideological** biases in Large Language Models (LLMs).
+
+You can use it to run **direct (questionnaire-based)** tests and **indirect (embedding-based)** checks, helping you see how models respond to various scales and prompts.
 
 ---
 ![WhatsApp Image 2025-02-15 at 19 37 09_6dc12657](https://github.com/user-attachments/assets/ecc5a3cc-b320-4420-bf66-1079bc737e57)

@@ -1,124 +1,106 @@
-# LLM Political Survey Analysis
+# The Ethics Engine: Measuring Moral and Ideological Bias in LLMs
 
-A computational social science research project investigating how different AI language models respond to standardized political and moral survey questions across various ideological perspectives.
+This repository hosts a **modular pipeline** to detect, measure, and visualize **moral** and **ideological** biases in Large Language Models (LLMs). It aligns with the concepts in the dissertation “The Ethics Engine: Building a Modular Pipeline to Uncover AI Bias and Moral Alignments.” You can use it to run **direct (questionnaire-based)** tests and **indirect (embedding-based)** checks, helping you see how models respond to various scales and prompts.
 
-![Series Graph MFQ](https://github.com/user-attachments/assets/e5f14f85-e6dd-436f-9b60-111dc50fd33f)
+---
+![WhatsApp Image 2025-02-15 at 19 37 09_6dc12657](https://github.com/user-attachments/assets/ecc5a3cc-b320-4420-bf66-1079bc737e57)
 
-## Project Overview
+## Overview
 
-This research systematically analyzes how Large Language Models (LLMs) interpret and respond to political and moral questions when prompted with different ideological perspectives. By using standardized psychometric scales and deliberate prompt engineering, we explore AI moral foundations and potential political biases.
+- **Goal**: Give researchers, policymakers, and other users a way to collect and interpret LLM outputs against **psychometric frameworks** like Moral Foundations Theory, Right-Wing Authoritarianism, and more.
+- **Key Idea**: Gather data from LLMs under different prompt styles, then run both **survey scoring** and **embedding analysis** to find underlying patterns.
+- **Outcome**: Produce clear findings about moral and ideological leanings, which can inform AI audits, model improvements, and policy steps.
 
-### Research Questions
-- How do different LLMs interpret moral and political survey questions?
-- Can LLMs effectively role-play different political perspectives?
-- Do responses vary systematically across different prompting styles?
-- What biases or patterns emerge in moral foundation scores?
+---
 
-### Implemented Surveys
-- **Moral Foundations Questionnaire (MFQ)**
-  - Measures moral intuitions across care, fairness, loyalty, authority, and purity
-- **Right-Wing Authoritarianism Scale (RWA)**
-  - Assesses authoritarian submission, aggression, and conventionalism
-- **Left-Wing Authoritarianism Scale (LWA)**
-  - Measures anti-hierarchical aggression, top-down censorship, and anti-conventionalism
+## Features
 
-### Supported Models
-- OpenAI (GPT4o and later) 
-- Anthropic (Claude)
-- Llama (DeepSeek included as well as all other Llama framework models)
-- Grok
+- **Direct Questionnaire**: Prompts LLMs with standard survey items and uses well-known scoring methods.
+- **Indirect Embedding**: Analyzes text embeddings to spot hidden patterns or moral signals in responses.
+- **Modular Setup**: Add new scales, tweak prompt styles, or plug in new models with ease.
+- **Clear Outputs**: Generates CSV files and charts for quick review.
 
-## Technical Architecture
+---
 
-### Tech Stack
-- **Implementation**: Python 3.8+ in Jupyter Notebook
-- **Data Storage**: CSV-based
-- **Key Libraries**:
-  ```
-  pandas         # Data processing
-  asyncio        # Concurrent API calls
-  openai         # OpenAI API client
-  anthropic      # Claude API client
-  llamaapi       # Llama API client
-  pydantic       # Data validation
-  plotly/seaborn # Visualization
-  ```
+## Getting Started
 
-## Setup and Installation
+1. **Install Dependencies**  
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. **Set API Keys**  
+   ```bash
+   export OPENAI_API_KEY=your_openai_key
+   export ANTHROPIC_API_KEY=your_anthropic_key
+   ```
+3. **Configure the Pipeline**  
+   - Edit `config.yaml` or `config.json` to choose scales (MFQ, RWA, LWA) and define prompt styles.
+4. **Run the Notebook**  
+   - Open `survey_aggregator.ipynb` in Jupyter.
+   - Adjust settings if needed.
+   - Run all cells.
 
-1. Clone the repository:
-```bash
-git clone https://github.com/RinDig/PsychoMetricGPT.git
-cd llm-political-survey
-```
+---
 
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+## Pipeline Flow
 
-3. Configure API keys:
-```bash
-export OPENAI_API_KEY='your-key-here'
-export ANTHROPIC_API_KEY='your-key-here'
-export LLAMA_API_KEY='your-key-here'
-export XAI_API_KEY='your-key-here'
-export DEEPSEEK_API_KEY='your-key-here'
-```
+1. **Config Load**  
+   - Reads user-chosen scales, model keys, and prompt strategies.
+2. **Data Collection**  
+   - Sends standardized prompts to chosen LLMs (GPT, Claude, Llama, etc.).
+   - Handles retries and stores raw outputs.
+3. **Analysis**  
+   - **Direct**: Scores responses against known scales (e.g., MFQ sub-scales).
+   - **Indirect**: Converts responses into embeddings, then runs clustering or PCA to find bias signals.
+4. **Reporting**  
+   - Creates CSV files with raw scores and summary stats.
+   - Generates plots to compare results across models and prompts.
 
-## Usage
+---
 
-The project is implemented in a Jupyter notebook (`survey_aggregator.ipynb`) with these main components:
+## Example Usage
 
-### 1. Configuration
 ```python
-SCALES_TO_RUN = ["MFQ"]  # Options: ["MFQ", "RWA", "LWA"]
-PROMPT_STYLES = ["neutral", "extreme_liberal", "extreme_republican"]
-MODELS_TO_RUN = ["OpenAI", "Claude", "Llama", "Grok", "DeepSeek"]
+# In survey_aggregator.ipynb
+SCALES_TO_RUN = ["MFQ", "RWA", "LWA"]
+PROMPT_STYLES = ["neutral", "left_biased", "right_biased"]
+MODELS_TO_RUN = ["OpenAI", "Claude", "Llama"]
+
+# Run data collection
+collect_data()
+
+# Run analysis and show charts
+analyze_responses()
+plot_results()
 ```
 
-### 2. Data Collection
-- Async API calls to multiple LLMs
-- Rate limit handling and error management
-- Structured response parsing
-- Response validation and scoring
+---
 
-### 3. Analysis Pipeline
-- Foundation score calculation
-- Political alignment analysis
-- Statistical comparisons
-- Visualization generation
+## Results
 
-## Output Files
+- **Quantitative Scores**: Table of mean scores for each moral foundation or authoritarian scale per model.
+- **Visualization**: Radar plots or bar charts showing how each model leans under different prompts.
+- **Embedding Insights**: PCA or clustering plots that show hidden groupings in text outputs.
 
-The analysis generates several key outputs:
-- `unified_responses.csv`: Raw LLM responses
-- `mfq_foundation_scores.csv`: Processed moral foundation scores
-- Visualization plots comparing model responses
+---
 
-## Contributing
+## Future Directions
 
-Contributions are welcome! Areas for potential improvement:
-- Additional psychometric scales
-- New LLM integrations
-- Enhanced visualization options
-- Statistical analysis methods
+- Add more scales (e.g., **Dark Triad**, **Schwartz Values**).
+- Support local models for offline testing.
+- Expand output to user-friendly dashboards for policymakers.
+- Refine prompt strategies to test even more nuanced biases.
 
+---
 
 ## Citation
 
-If you use this code in your research, please cite:
+If you use this pipeline or its ideas, please cite the related dissertation:
 
-```bibtex
-  author = {J.E. Van Clief},
-  title = {LLM Political Survey Analysis},
-  year = {2024},
-  url = {[https://github.com/yourusername/llm-political-survey](https://github.com/RinDig/PsychoMetricGPT)}
-}
 ```
-
-## Acknowledgments
-
-- Moral Foundations Questionnaire (MFQ) by Graham, Haidt, & Nosek
-- Right-Wing Authoritarianism Scale by Altemeyer
-- Left-Wing Authoritarianism Scale by Conway et al.
+@misc{vanclief2025ethicsengine,
+  title     = {The Ethics Engine: Building a Modular Pipeline to Uncover AI Bias and Moral Alignments},
+  author    = {J.E. Van Clief},
+  year      = {2025},
+  url       = {https://github.com/RinDig/GPTmetrics}
+}

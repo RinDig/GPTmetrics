@@ -5,7 +5,7 @@ This repository hosts a **modular pipeline** to detect, measure, and visualize *
 You can use it to run **direct (questionnaire-based)** tests and **indirect (embedding-based)** checks, helping you see how models respond to various scales and prompts.
 
 ---
-![WhatsApp Image 2025-02-15 at 19 37 09_6dc12657](https://github.com/user-attachments/assets/ecc5a3cc-b320-4420-bf66-1079bc737e57)
+![image](https://github.com/user-attachments/assets/335cc272-99ed-4b39-a662-88952cab00b5)
 
 ## Overview
 

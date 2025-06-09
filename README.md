@@ -1,116 +1,102 @@
-# The Ethics Engine: Measuring Moral and Ideological Bias in LLMs
+# LLM Survey Aggregator
 
-This repository hosts a **modular Python pipeline** designed to detect, measure, and visualize **moral** and **ideological** biases in Large Language Models (LLMs). It allows users to run questionnaire-based tests against various LLMs and analyze their responses based on established psychometric frameworks.
+## Overview
 
----
+This project uses a Jupyter Notebook (`survey_aggregator.ipynb`) to systematically administer psychological and political surveys to various Large Language Models (LLMs). It is designed to test the responses of different models under various prompting conditions (e.g., adopting a specific political persona) across several well-established psychological scales.
 
-## Project Overview
+![Graph](https://github.com/user-attachments/assets/186a4c49-c197-4f7a-88a7-f0776d157538)
 
-- **Goal**: To provide a systematic way to collect and interpret LLM outputs in response to psychological surveys, using scales like Moral Foundations Theory (MFQ), Right-Wing Authoritarianism (RWA), and Left-Wing Authoritarianism (LWA).
-- **Methodology**: The pipeline sends survey questions to configured LLMs using different prompt styles. The responses are then collected, scored, and analyzed.
-- **Outcome**: The project generates CSV files with raw and scored data, as well as visualizations to help understand the moral and ideological leanings of different LLMs under various prompting conditions.
 
----
+The primary goal is to gather data on how different LLMs respond to nuanced, politically-charged, or value-laden questions, providing a framework for analyzing potential biases, personality traits, or cognitive styles embedded in these models.
 
-## Modular Structure
+## Features
 
-The project has been refactored from a Jupyter Notebook into a set of Python modules for better organization and reusability:
+- **Multi-Model Support**: Easily configurable to run surveys on multiple LLMs, including:
+  - OpenAI (e.g., `gpt-4o`)
+  - Anthropic (e.g., `claude-3-5-sonnet`)
+  - Llama API-compatible models (e.g., `llama3.1-70b`)
+  - Grok (`grok-2-latest`)
+  - DeepSeek (`deepseek-v3`)
+- **Diverse Psychological Scales**: Includes a variety of pre-configured survey instruments:
+  - **RWA (Right-Wing Authoritarianism)**: Measures authoritarian submission, aggression, and conventionalism.
+  - **LWA (Left-Wing Authoritarianism)**: Measures authoritarianism from a left-wing perspective.
+  - **MFQ (Moral Foundations Questionnaire)**: Assesses reliance on different moral foundations (Care, Fairness, Loyalty, Authority, Purity).
+  - **NFC (Need for Cognition)**: Measures an individual's tendency to engage in and enjoy thinking.
+- **Flexible Prompting**: Apply different "personas" or prompt styles to the models to test how their responses change based on the assigned identity (e.g., "minimal," "extreme liberal," "extreme conservative").
+- **Asynchronous Processing**: Leverages `asyncio` to run API calls concurrently, significantly speeding up data collection.
+- **Smart Rate Limiting**: Uses semaphores and queues to manage API calls efficiently, respecting rate limits for different providers (OpenAI, Anthropic, etc.).
+- **Robust Parsing & Error Handling**: Includes a flexible parser to extract numeric scores and justifications from model responses. It has built-in retries (`tenacity`) and fallback mechanisms for failed API calls or parsing errors.
+- **Detailed Output**: Generates clean, analyzable CSV files with raw responses, scored values (including reverse-scoring), and aggregated results for specific scales like the MFQ.
 
--   `main.py`: The main script to run the entire pipeline.
--   `config.py`: Contains all configurations, including API key environment variable names, model settings, prompt templates, survey questions, and global run parameters (e.g., which scales, models, and prompt styles to use).
--   `llm_services.py`: Handles interactions with various LLM APIs (OpenAI, Anthropic, LlamaAPI for Llama and DeepSeek, Grok via XAI). Includes response parsing and cost tracking.
--   `task_processing.py`: Manages the asynchronous execution of survey tasks, including chunking and rate limiting for different API providers.
--   `data_analysis.py`: Performs scoring for different scales (MFQ, RWA, LWA), handles reverse scoring, and identifies refusal responses.
--   `visualization.py`: Generates plots to visualize the analysis results, such as authoritarian scores.
-
----
-
-## Setup Instructions
+## Setup
 
 1.  **Clone the Repository**:
     ```bash
-    git clone https://github.com/RinDig/GPTmetrics.git
-    cd GPTmetrics
+    git clone <your-repository-url>
+    cd <your-repository-directory>
     ```
 
-2.  **Create a Virtual Environment** (Recommended):
+2.  **Install Dependencies**:
+    It is recommended to use a virtual environment.
     ```bash
     python -m venv venv
     source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
     ```
-
-3.  **Install Dependencies**:
-    Ensure you have Python 3.8+ installed. Then, install the required libraries using:
+    Install the required packages from `requirements.txt`:
     ```bash
     pip install -r requirements.txt
     ```
 
-4.  **Set Up API Keys**:
-    Create a `.env` file in the root directory of the project. This file will store your API keys. Add your keys to this file, following the template below:
-
-    ```env
-    OPENAI_API_KEY=your_openai_key_here
-    ANTHROPIC_API_KEY=your_anthropic_key_here
-    LLAMA_API_KEY=your_llamaapi_key_here
-    XAI_API_KEY=your_xai_api_key_for_grok_here
-    DEEPSEEK_API_KEY=your_deepseek_api_key_here
-    ```
-    The pipeline loads these keys using `python-dotenv`.
-
----
-
-## Running the Pipeline
-
-1.  **Configure the Run (Optional)**:
-    Before running, you might want to adjust parameters in `config.py`. Key variables you can modify include:
-    -   `SCALES_TO_RUN`: A list of scales to include in the run (e.g., `["LWA", "RWA", "MFQ"]`).
-    -   `MODELS_TO_RUN`: A list of LLMs to test (e.g., `["OpenAI", "Claude", "Grok"]`). Ensure corresponding API keys are in your `.env` file.
-    -   `PROMPT_STYLES_TO_RUN`: A list of prompt styles to use for each question (e.g., `["minimal", "extreme_liberal"]`).
-    -   `NUM_CALLS_TEST`: The number of times each question/prompt/model combination will be run.
-
-2.  **Execute the Main Script**:
-    Run the pipeline using:
+3.  **Create Environment File**:
+    Create a `.env` file in the root directory by copying the example file:
     ```bash
-    python main.py
+    cp .env.example .env
     ```
-    The script will process the tasks, perform analyses, and generate output files.
+    Open the `.env` file and add your API keys for the services you intend to use:
+    ```
+    OPENAI_API_KEY="your-openai-key"
+    ANTHROPIC_API_KEY="your-anthropic-key"
+    LLAMA_API_KEY="your-llamaapi-key"
+    XAI_API_KEY="your-grok-key"
+    DEEPSEEK_API_KEY="your-deepseek-key"
+    ```
 
----
+## How to Use
+
+1.  **Configure the Experiment**:
+    Open the `survey_aggregator.ipynb` notebook. Navigate to the **Global Parameters** cell.
+    Modify the following lists to define the scope of your run:
+    - `MODELS_TO_RUN`: A list of model names to test (e.g., `["OpenAI", "Claude"]`).
+    - `SCALES_TO_RUN`: A list of psychological scales to administer (e.g., `["RWA", "LWA"]`).
+    - `PROMPT_STYLES_TO_RUN`: A list of personas the models should adopt (e.g., `["minimal", "extreme_liberal"]`).
+    - `NUM_CALLS_TEST`: The number of times to repeat each unique question-model-prompt combination.
+
+2.  **Run the Notebook**:
+    Execute the cells in the Jupyter Notebook from top to bottom. A progress bar will appear to show the status of the API calls.
 
 ## Output Files
 
-The pipeline generates several output files in the root directory:
+After a successful run, the following files will be generated:
 
--   `unified_responses.csv`: Contains all raw and scored responses from the LLMs, including metadata about the model, prompt style, question, and run number.
--   `refusal_responses.csv`: A subset of `unified_responses.csv` that logs instances where models refused to answer or provided responses that could not be parsed into a valid score.
--   `mfq_foundation_scores.csv`: (If MFQ is run) Contains aggregated scores for each moral foundation, per model and prompt style.
--   `rwa_results.csv`: (If RWA is run) Contains aggregated total and normalized RWA scores.
--   `lwa_results.csv`: (If LWA is run) Contains aggregated total and normalized LWA scores.
--   `rwa_avg_results.csv`: (If RWA is run) Contains average RWA scores per question.
--   `lwa_avg_results.csv`: (If LWA is run) Contains average LWA scores per question.
--   `authoritarian_scores_plot.png`: (If RWA & LWA are run) A plot visualizing normalized RWA and LWA scores.
--   `avg_authoritarian_scores_plot.png`: (If RWA & LWA are run) A plot visualizing average RWA and LWA scores per question.
+-   `unified_responses.csv`: The primary output file. It contains one row for every single API call made, including:
+    -   Model name, prompt style, scale name, question ID, and question text.
+    -   The raw text response from the model.
+    -   The parsed numeric score and justification.
+    -   The final `scored_value` after applying reverse-scoring logic where needed.
+    -   Metadata like call duration.
 
-Logs are printed to the console during execution.
+-   `refusal_responses.csv`: A filtered version of the main results, containing only the rows where the model failed to provide a valid numeric answer. This is useful for analyzing model refusals or parsing issues.
 
----
+-   `mfq_foundation_scores.csv`: If the `MFQ` scale is run, this file contains aggregated scores for each of the six moral foundations (Care, Equality, Proportionality, Loyalty, Authority, Purity), broken down by model and prompt style.
 
-## Future Directions
+## Code Structure
 
--   Add more psychometric scales.
--   Support local models for offline testing.
--   Expand output to user-friendly dashboards.
+The `survey_aggregator.ipynb` notebook is organized into the following main sections:
 
----
-
-## Citation
-
-If you use this pipeline or its ideas, please consider citing the related work:
-```
-@misc{vanclief2025ethicsengine,
-  title     = {The Ethics Engine: Building a Modular Pipeline to Uncover AI Bias and Moral Alignments},
-  author    = {J.E. Van Clief},
-  year      = {2025},
-  url       = {https://github.com/RinDig/GPTmetrics}
-}
-```
+1.  **Imports and Setup**: Initializes libraries and loads environment variables.
+2.  **Model and Prompt Configuration**: Defines the `MODEL_CONFIG`, `prompt_templates`, and the questions for each scale (`rwa_questions`, `lwa_questions`, etc.).
+3.  **Core API and Parsing Logic**: Contains the `safe_parse_survey_answer`, `call_model`, and `call_model_api` functions that form the backbone of the data collection process.
+4.  **Task Execution Engine**: The `process_tasks_in_chunks` function manages the asynchronous execution of all survey tasks.
+5.  **Main Execution Block**: Sets the global parameters for the run, builds the task list, and initiates the execution.
+6.  **Data Processing and Saving**: Once the results are collected, this section applies reverse-scoring, builds a Pandas DataFrame, and saves the `unified_responses.csv`.
+7.  **Analysis Functions**: Includes helper functions to generate supplementary reports, like `save_refusal_responses` and `calculate_mfq_scores`.

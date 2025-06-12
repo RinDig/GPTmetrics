@@ -4,7 +4,8 @@
 
 This project uses a Jupyter Notebook (`survey_aggregator.ipynb`) to systematically administer psychological and political surveys to various Large Language Models (LLMs). It is designed to test the responses of different models under various prompting conditions (e.g., adopting a specific political persona) across several well-established psychological scales.
 
-![Graph](https://github.com/user-attachments/assets/186a4c49-c197-4f7a-88a7-f0776d157538)
+![WhatsApp Image 2025-06-10 at 17 42 25_797f3260](https://github.com/user-attachments/assets/c79330df-9e96-4f25-a396-8135dcce1f2f)
+
 
 
 The primary goal is to gather data on how different LLMs respond to nuanced, politically-charged, or value-laden questions, providing a framework for analyzing potential biases, personality traits, or cognitive styles embedded in these models.

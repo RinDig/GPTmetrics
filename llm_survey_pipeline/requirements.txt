@@ -1,0 +1,14 @@
+pandas
+seaborn
+matplotlib
+python-dotenv
+nest-asyncio
+pydantic
+openai
+anthropic
+llamaapi
+tenacity
+tqdm
+notebook
+streamlit
+plotly

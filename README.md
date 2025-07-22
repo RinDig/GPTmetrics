@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project uses a Jupyter Notebook (`survey_aggregator.ipynb`) to systematically administer psychological and political surveys to various Large Language Models (LLMs). It is designed to test the responses of different models under various prompting conditions (e.g., adopting a specific political persona) across several well-established psychological scales.
+This project uses a python pipline to systematically administer psychological and political surveys to various Large Language Models (LLMs). It is designed to test the responses of different models under various prompting conditions (e.g., adopting a specific political persona) across several well-established psychological scales.
 
 ![WhatsApp Image 2025-06-10 at 17 42 25_797f3260](https://github.com/user-attachments/assets/c79330df-9e96-4f25-a396-8135dcce1f2f)
 

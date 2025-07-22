@@ -10,94 +10,150 @@ This project uses a Jupyter Notebook (`survey_aggregator.ipynb`) to systematical
 
 The primary goal is to gather data on how different LLMs respond to nuanced, politically-charged, or value-laden questions, providing a framework for analyzing potential biases, personality traits, or cognitive styles embedded in these models.
 
+# LLM Survey Pipeline - Modular Version
+
+A modular, scalable implementation of the LLM Survey Aggregator with a web dashboard interface.
+
 ## Features
 
-- **Multi-Model Support**: Easily configurable to run surveys on multiple LLMs, including:
-  - OpenAI (e.g., `gpt-4o`)
-  - Anthropic (e.g., `claude-3-5-sonnet`)
-  - Llama API-compatible models (e.g., `llama3.1-70b`)
-  - Grok (`grok-2-latest`)
-  - DeepSeek (`deepseek-v3`)
-- **Diverse Psychological Scales**: Includes a variety of pre-configured survey instruments:
-  - **RWA (Right-Wing Authoritarianism)**: Measures authoritarian submission, aggression, and conventionalism.
-  - **LWA (Left-Wing Authoritarianism)**: Measures authoritarianism from a left-wing perspective.
-  - **MFQ (Moral Foundations Questionnaire)**: Assesses reliance on different moral foundations (Care, Fairness, Loyalty, Authority, Purity).
-  - **NFC (Need for Cognition)**: Measures an individual's tendency to engage in and enjoy thinking.
-- **Flexible Prompting**: Apply different "personas" or prompt styles to the models to test how their responses change based on the assigned identity (e.g., "minimal," "extreme liberal," "extreme conservative").
-- **Asynchronous Processing**: Leverages `asyncio` to run API calls concurrently, significantly speeding up data collection.
-- **Smart Rate Limiting**: Uses semaphores and queues to manage API calls efficiently, respecting rate limits for different providers (OpenAI, Anthropic, etc.).
-- **Robust Parsing & Error Handling**: Includes a flexible parser to extract numeric scores and justifications from model responses. It has built-in retries (`tenacity`) and fallback mechanisms for failed API calls or parsing errors.
-- **Detailed Output**: Generates clean, analyzable CSV files with raw responses, scored values (including reverse-scoring), and aggregated results for specific scales like the MFQ.
+- **Modular Architecture**: Clean separation of concerns with organized modules
+- **Web Dashboard**: Interactive Streamlit dashboard for easy configuration and visualization
+- **CLI Interface**: Command-line interface for automated runs
+- **Scalable Design**: Easy to add new models, scales, or prompt templates
+- **Real-time Progress**: Visual progress tracking during survey execution
+- **Advanced Analytics**: Built-in analysis and visualization tools
 
-## Setup
+## Directory Structure
 
-1.  **Clone the Repository**:
-    ```bash
-    git clone <your-repository-url>
-    cd <your-repository-directory>
-    ```
+```
+llm_survey_pipeline/
+├── config/              # Configuration modules
+│   ├── models.py        # Model configurations
+│   ├── prompts.py       # Prompt templates (preserved exactly)
+│   └── scales.py        # Scale templates (RWA, LWA, MFQ, NFC - preserved exactly)
+├── core/                # Core functionality
+│   ├── api_clients.py   # API client implementations
+│   ├── parsers.py       # Response parsing logic
+│   ├── processors.py    # Task processing engine
+│   └── validators.py    # Data validation
+├── models/              # Data models
+│   └── data_models.py   # Pydantic models
+├── utils/               # Utilities
+│   ├── cost_tracking.py # Token/cost tracking
+│   └── analysis.py      # Analysis functions
+├── dashboard/           # Web dashboard
+│   └── app.py          # Streamlit application
+├── data/outputs/        # Output directory
+├── main.py             # CLI interface
+└── requirements.txt
+```
 
-2.  **Install Dependencies**:
-    It is recommended to use a virtual environment.
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-    ```
-    Install the required packages from `requirements.txt`:
-    ```bash
-    pip install -r requirements.txt
-    ```
+## Installation
 
-3.  **Create Environment File**:
-    Create a `.env` file in the root directory by copying the example file:
-    ```bash
-    cp .env.example .env
-    ```
-    Open the `.env` file and add your API keys for the services you intend to use:
-    ```
-    OPENAI_API_KEY="your-openai-key"
-    ANTHROPIC_API_KEY="your-anthropic-key"
-    LLAMA_API_KEY="your-llamaapi-key"
-    XAI_API_KEY="your-grok-key"
-    DEEPSEEK_API_KEY="your-deepseek-key"
-    ```
+1. Clone or copy the `llm_survey_pipeline` directory
+2. Create a virtual environment:
+   ```bash
+   cd llm_survey_pipeline
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Create a `.env` file in the root directory:
+   ```
+   OPENAI_API_KEY="your-openai-key"
+   ANTHROPIC_API_KEY="your-anthropic-key"
+   LLAMA_API_KEY="your-llamaapi-key"
+   XAI_API_KEY="your-grok-key"
+   DEEPSEEK_API_KEY="your-deepseek-key"
+   ```
 
-## How to Use
+## Usage
 
-1.  **Configure the Experiment**:
-    Open the `survey_aggregator.ipynb` notebook. Navigate to the **Global Parameters** cell.
-    Modify the following lists to define the scope of your run:
-    - `MODELS_TO_RUN`: A list of model names to test (e.g., `["OpenAI", "Claude"]`).
-    - `SCALES_TO_RUN`: A list of psychological scales to administer (e.g., `["RWA", "LWA"]`).
-    - `PROMPT_STYLES_TO_RUN`: A list of personas the models should adopt (e.g., `["minimal", "extreme_liberal"]`).
-    - `NUM_CALLS_TEST`: The number of times to repeat each unique question-model-prompt combination.
+### Web Dashboard
 
-2.  **Run the Notebook**:
-    Execute the cells in the Jupyter Notebook from top to bottom. A progress bar will appear to show the status of the API calls.
+Run the dashboard for an interactive experience:
+
+```bash
+streamlit run dashboard/app.py
+```
+
+The dashboard provides:
+- Interactive model, scale, and prompt selection
+- Real-time progress tracking
+- Visual analytics and charts
+- Data export functionality
+- Configuration viewing
+
+### Command Line Interface
+
+For automated runs or integration with scripts:
+
+```bash
+python main.py --scales RWA LWA --models OpenAI Claude --prompts minimal extreme_liberal --runs 2
+```
+
+Options:
+- `--scales`: List of scales to run (RWA, RWA2, LWA, MFQ, NFC)
+- `--models`: List of models to test (OpenAI, Claude, Grok, Llama, DeepSeek)
+- `--prompts`: Prompt styles to use
+- `--runs`: Number of runs per question
+- `--temperature`: Model temperature (default: 0.0)
+- `--output-dir`: Output directory for results
+
+## Adding New Components
+
+### Adding a New Scale
+
+1. Edit `config/scales.py`
+2. Add your scale questions following the existing format:
+   ```python
+   new_scale_questions = [
+       {"scale_name": "NEW", "id": "NEW_1", "text": "Question text", 
+        "scale_range": [1,7], "reverse_score": False},
+       # ... more questions
+   ]
+   ```
+3. Add to `all_scales` list
+
+### Adding a New Model
+
+1. Edit `config/models.py`
+2. Add model configuration:
+   ```python
+   "NewModel": {
+       "client": "openai",  # or "anthropic", "llamaapi"
+       "model": "model-name",
+       "api_key": os.getenv("NEW_MODEL_API_KEY"),
+   }
+   ```
+
+### Adding a New Prompt Style
+
+1. Edit `config/prompts.py`
+2. Add prompt template:
+   ```python
+   "new_style": "Your prompt template here..."
+   ```
 
 ## Output Files
 
-After a successful run, the following files will be generated:
+- `unified_responses.csv`: All survey responses with scores
+- `refusal_responses.csv`: Responses where models refused/failed
+- `mfq_foundation_scores.csv`: MFQ foundation analysis (if MFQ scale is run)
 
--   `unified_responses.csv`: The primary output file. It contains one row for every single API call made, including:
-    -   Model name, prompt style, scale name, question ID, and question text.
-    -   The raw text response from the model.
-    -   The parsed numeric score and justification.
-    -   The final `scored_value` after applying reverse-scoring logic where needed.
-    -   Metadata like call duration.
+## API Rate Limits
 
--   `refusal_responses.csv`: A filtered version of the main results, containing only the rows where the model failed to provide a valid numeric answer. This is useful for analyzing model refusals or parsing issues.
+The system includes intelligent rate limiting:
+- OpenAI/Grok: 3 concurrent calls, 1 second between chunks
+- Anthropic: 5 concurrent calls, 0.5 seconds between chunks
+- Llama/DeepSeek: 10 concurrent calls, 0.2 seconds between chunks
 
--   `mfq_foundation_scores.csv`: If the `MFQ` scale is run, this file contains aggregated scores for each of the six moral foundations (Care, Equality, Proportionality, Loyalty, Authority, Purity), broken down by model and prompt style.
+## Notes
 
-## Code Structure
-
-The `survey_aggregator.ipynb` notebook is organized into the following main sections:
-
-1.  **Imports and Setup**: Initializes libraries and loads environment variables.
-2.  **Model and Prompt Configuration**: Defines the `MODEL_CONFIG`, `prompt_templates`, and the questions for each scale (`rwa_questions`, `lwa_questions`, etc.).
-3.  **Core API and Parsing Logic**: Contains the `safe_parse_survey_answer`, `call_model`, and `call_model_api` functions that form the backbone of the data collection process.
-4.  **Task Execution Engine**: The `process_tasks_in_chunks` function manages the asynchronous execution of all survey tasks.
-5.  **Main Execution Block**: Sets the global parameters for the run, builds the task list, and initiates the execution.
-6.  **Data Processing and Saving**: Once the results are collected, this section applies reverse-scoring, builds a Pandas DataFrame, and saves the `unified_responses.csv`.
-7.  **Analysis Functions**: Includes helper functions to generate supplementary reports, like `save_refusal_responses` and `calculate_mfq_scores`.
+- All scale templates and prompt templates are preserved exactly as in the original notebook
+- The modular structure makes it easy to extend and maintain
+- The dashboard provides a user-friendly interface while maintaining all original functionality
+- Progress bars and real-time updates keep you informed during long runs

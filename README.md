@@ -10,10 +10,6 @@ This project uses a python pipline to systematically administer psychological an
 
 The primary goal is to gather data on how different LLMs respond to nuanced, politically-charged, or value-laden questions, providing a framework for analyzing potential biases, personality traits, or cognitive styles embedded in these models.
 
-# LLM Survey Pipeline - Modular Version
-
-A modular, scalable implementation of the LLM Survey Aggregator with a web dashboard interface.
-
 ## Features
 
 - **Modular Architecture**: Clean separation of concerns with organized modules

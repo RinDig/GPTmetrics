@@ -4,152 +4,171 @@
 
 This project uses a python pipline to systematically administer psychological and political surveys to various Large Language Models (LLMs). It is designed to test the responses of different models under various prompting conditions (e.g., adopting a specific political persona) across several well-established psychological scales.
 
-![WhatsApp Image 2025-06-10 at 17 42 25_797f3260](https://github.com/user-attachments/assets/c79330df-9e96-4f25-a396-8135dcce1f2f)
-
+<img width="1004" height="718" alt="image" src="https://github.com/user-attachments/assets/013f2760-5f73-4846-a720-8c181ce18d49" />
 
 
 The primary goal is to gather data on how different LLMs respond to nuanced, politically-charged, or value-laden questions, providing a framework for analyzing potential biases, personality traits, or cognitive styles embedded in these models.
+# LLM Psychological Assessment Survey
+
+A comprehensive framework for evaluating psychological and political dimensions of Large Language Models (LLMs) using established psychometric scales.
+
+## Overview
+
+This project surveys multiple state-of-the-art LLMs (OpenAI GPT models, Claude, Grok, Llama, DeepSeek) using validated psychological assessment instruments to measure their responses across different political biases and psychological dimensions. The framework provides insights into how these models exhibit patterns related to authoritarianism, moral foundations, and cognitive preferences.
 
 ## Features
 
-- **Modular Architecture**: Clean separation of concerns with organized modules
-- **Web Dashboard**: Interactive Streamlit dashboard for easy configuration and visualization
-- **CLI Interface**: Command-line interface for automated runs
-- **Scalable Design**: Easy to add new models, scales, or prompt templates
-- **Real-time Progress**: Visual progress tracking during survey execution
-- **Advanced Analytics**: Built-in analysis and visualization tools
+- **Multi-Model Support**: Survey OpenAI GPT-4o, Anthropic Claude 3.5 Sonnet, xAI Grok-2, Meta Llama 3.1-70B, and DeepSeek-v3 models
+- **Comprehensive Assessment Scales**:
+  - Right-Wing Authoritarianism (RWA): 34 questions
+  - Right-Wing Authoritarianism v2 (RWA2): 22 questions  
+  - Left-Wing Authoritarianism (LWA): 39 questions
+  - Moral Foundations Questionnaire (MFQ): 36 questions
+  - Need for Cognition (NFC): 45 questions
+- **Dual Response Formats**: 
+  - Numeric prompts: Direct numerical scale responses
+  - Text prompts: Verbal Likert-scale responses with automatic conversion
+- **Flexible Prompt Styles**: Test models with different political bias framings (extreme liberal, moderate liberal, neutral, moderate conservative, extreme conservative)
+- **Robust Processing Pipeline**: 
+  - Async API calls with retry logic and exponential backoff
+  - Separate rate limiting per API provider
+  - Advanced response parsing with multiple fallback mechanisms
+  - Text-to-number conversion for verbal responses
+- **Automated Analysis**: Response aggregation, reverse scoring, MFQ foundation score calculation, and refusal tracking
 
-## Directory Structure
+## Quick Start
 
-```
-llm_survey_pipeline/
-├── config/              # Configuration modules
-│   ├── models.py        # Model configurations
-│   ├── prompts.py       # Prompt templates (preserved exactly)
-│   └── scales.py        # Scale templates (RWA, LWA, MFQ, NFC - preserved exactly)
-├── core/                # Core functionality
-│   ├── api_clients.py   # API client implementations
-│   ├── parsers.py       # Response parsing logic
-│   ├── processors.py    # Task processing engine
-│   └── validators.py    # Data validation
-├── models/              # Data models
-│   └── data_models.py   # Pydantic models
-├── utils/               # Utilities
-│   ├── cost_tracking.py # Token/cost tracking
-│   └── analysis.py      # Analysis functions
-├── dashboard/           # Web dashboard
-│   └── app.py          # Streamlit application
-├── data/outputs/        # Output directory
-├── main.py             # CLI interface
-└── requirements.txt
-```
+### Prerequisites
 
-## Installation
+- Python 3.8+
+- Jupyter Notebook
+- API keys for the LLM providers you want to survey
 
-1. Clone or copy the `llm_survey_pipeline` directory
-2. Create a virtual environment:
-   ```bash
-   cd llm_survey_pipeline
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Create a `.env` file in the root directory:
-   ```
-   OPENAI_API_KEY="your-openai-key"
-   ANTHROPIC_API_KEY="your-anthropic-key"
-   LLAMA_API_KEY="your-llamaapi-key"
-   XAI_API_KEY="your-grok-key"
-   DEEPSEEK_API_KEY="your-deepseek-key"
-   ```
+### Installation
 
-## Usage
-
-### Web Dashboard
-
-Run the dashboard for an interactive experience:
-
+1. Clone the repository:
 ```bash
-streamlit run dashboard/app.py
+git clone https://github.com/yourusername/gpt-metrics.git
+cd gpt-metrics
 ```
 
-The dashboard provides:
-- Interactive model, scale, and prompt selection
-- Real-time progress tracking
-- Visual analytics and charts
-- Data export functionality
-- Configuration viewing
-
-### Command Line Interface
-
-For automated runs or integration with scripts:
-
+2. Install dependencies:
 ```bash
-python main.py --scales RWA LWA --models OpenAI Claude --prompts minimal extreme_liberal --runs 2
+pip install pandas seaborn matplotlib python-dotenv nest_asyncio openai anthropic llamaapi tenacity tqdm notebook
 ```
 
-Options:
-- `--scales`: List of scales to run (RWA, RWA2, LWA, MFQ, NFC)
-- `--models`: List of models to test (OpenAI, Claude, Grok, Llama, DeepSeek)
-- `--prompts`: Prompt styles to use
-- `--runs`: Number of runs per question
-- `--temperature`: Model temperature (default: 0.0)
-- `--output-dir`: Output directory for results
+3. Set up API keys:
+Create a `.env` file in the project root:
+```env
+OPENAI_API_KEY=your_openai_key
+ANTHROPIC_API_KEY=your_anthropic_key
+LLAMA_API_KEY=your_llama_key
+XAI_API_KEY=your_xai_key
+DEEPSEEK_API_KEY=your_deepseek_key
+```
 
-## Adding New Components
+### Usage
 
-### Adding a New Scale
+1. Launch Jupyter Notebook:
+```bash
+jupyter notebook survey_aggregator.ipynb
+```
 
-1. Edit `config/scales.py`
-2. Add your scale questions following the existing format:
-   ```python
-   new_scale_questions = [
-       {"scale_name": "NEW", "id": "NEW_1", "text": "Question text", 
-        "scale_range": [1,7], "reverse_score": False},
-       # ... more questions
-   ]
-   ```
-3. Add to `all_scales` list
+2. Configure survey parameters in the notebook:
+   - `SCALES_TO_RUN`: Select psychological scales to administer
+   - `MODELS_TO_RUN`: Choose which LLMs to survey
+   - `PROMPT_STYLES_TO_RUN`: Define political bias prompts
+   - `NUM_CALLS_TEST`: Set number of repetitions per question
 
-### Adding a New Model
-
-1. Edit `config/models.py`
-2. Add model configuration:
-   ```python
-   "NewModel": {
-       "client": "openai",  # or "anthropic", "llamaapi"
-       "model": "model-name",
-       "api_key": os.getenv("NEW_MODEL_API_KEY"),
-   }
-   ```
-
-### Adding a New Prompt Style
-
-1. Edit `config/prompts.py`
-2. Add prompt template:
-   ```python
-   "new_style": "Your prompt template here..."
-   ```
+3. Run all cells to execute the survey and generate results
 
 ## Output Files
 
-- `unified_responses.csv`: All survey responses with scores
-- `refusal_responses.csv`: Responses where models refused/failed
-- `mfq_foundation_scores.csv`: MFQ foundation analysis (if MFQ scale is run)
+The framework generates three CSV files:
+
+- **`unified_responses.csv`**: Complete survey responses from all models
+- **`mfq_foundation_scores.csv`**: Aggregated Moral Foundations scores
+- **`refusal_responses.csv`**: Instances where models refused or failed to answer
+
+## Configuration
+
+Key parameters can be adjusted in the notebook:
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `TEMPERATURE` | Model temperature setting | 1 |
+| `MAX_CONCURRENT_CALLS` | API call concurrency limit | 5 |
+| `NUM_CALLS_TEST` | Repetitions per question | 20 |
+| `SCALES_TO_RUN` | Which psychological scales to survey | ["LWA", "RWA2"] |
+| `PROMPT_STYLES_TO_RUN` | Political bias prompts to use | ["neutral", "extreme_liberal", "extreme_conservative"] |
+| `MODELS_TO_RUN` | LLM models to query | ["OpenAI", "Claude", "Grok"] |
+
+## Project Structure
+
+```
+gpt-metrics/
+├── survey_aggregator.ipynb   # Main notebook with survey logic
+├── .env                       # API keys (create this)
+├── README.md                  # This file
+└── output/                    # Generated CSV files (created on run)
+    ├── unified_responses.csv
+    ├── mfq_foundation_scores.csv
+    └── refusal_responses.csv
+```
+
+## Psychological Scales
+
+### Right-Wing Authoritarianism (RWA)
+- **RWA**: 34-item scale measuring submission to authority, aggression toward outgroups, and conventionalism
+- **RWA2**: 22-item revised version with updated wording
+
+### Left-Wing Authoritarianism (LWA)
+39-item scale measuring left-oriented authoritarian attitudes, including anti-hierarchical aggression and top-down censorship
+
+### Moral Foundations Questionnaire (MFQ)
+36-item scale assessing six moral foundations:
+- Care/Harm
+- Equality
+- Proportionality  
+- Loyalty/Betrayal
+- Authority/Subversion
+- Purity/Sanctity
+
+### Need for Cognition (NFC)
+45-item scale measuring tendency to engage in and enjoy effortful cognitive activities
 
 ## API Rate Limits
 
-The system includes intelligent rate limiting:
-- OpenAI/Grok: 3 concurrent calls, 1 second between chunks
-- Anthropic: 5 concurrent calls, 0.5 seconds between chunks
-- Llama/DeepSeek: 10 concurrent calls, 0.2 seconds between chunks
+The framework includes built-in rate limiting and retry logic:
+- Automatic retry with exponential backoff
+- Concurrent request management
+- Graceful handling of API errors
 
-## Notes
+## Contributing
 
-- All scale templates and prompt templates are preserved exactly as in the original notebook
-- The modular structure makes it easy to extend and maintain
-- The dashboard provides a user-friendly interface while maintaining all original functionality
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Citation
+
+If you use this framework in your research, please cite:
+
+```bibtex
+@software{llm_psychological_assessment,
+  title = {LLM Psychological Assessment Survey},
+  year = {2024},
+  url = {https://github.com/yourusername/gpt-metrics}
+}
+```
+
+## Acknowledgments
+
+This project uses established psychological scales from peer-reviewed research. Please refer to the original publications for scale validation and psychometric properties.
+
+## Contact
+
+For questions or support, please open an issue on GitHub.onality
 - Progress bars and real-time updates keep you informed during long runs

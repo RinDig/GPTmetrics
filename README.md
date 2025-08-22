@@ -1,20 +1,12 @@
-# LLM Survey Aggregator
-
-## Overview
-
-This project uses a python pipline to systematically administer psychological and political surveys to various Large Language Models (LLMs). It is designed to test the responses of different models under various prompting conditions (e.g., adopting a specific political persona) across several well-established psychological scales.
-
-<img width="1004" height="718" alt="image" src="https://github.com/user-attachments/assets/013f2760-5f73-4846-a720-8c181ce18d49" />
-
-
-The primary goal is to gather data on how different LLMs respond to nuanced, politically-charged, or value-laden questions, providing a framework for analyzing potential biases, personality traits, or cognitive styles embedded in these models.
 # LLM Psychological Assessment Survey
-
-A comprehensive framework for evaluating psychological and political dimensions of Large Language Models (LLMs) using established psychometric scales.
 
 ## Overview
 
 This project surveys multiple state-of-the-art LLMs (OpenAI GPT models, Claude, Grok, Llama, DeepSeek) using validated psychological assessment instruments to measure their responses across different political biases and psychological dimensions. The framework provides insights into how these models exhibit patterns related to authoritarianism, moral foundations, and cognitive preferences.
+
+
+<img width="1004" height="718" alt="image" src="https://github.com/user-attachments/assets/013f2760-5f73-4846-a720-8c181ce18d49" />
+
 
 ## Features
 

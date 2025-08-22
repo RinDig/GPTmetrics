@@ -150,9 +150,9 @@ If you use this framework in your research, please cite:
 
 ```bibtex
 @software{llm_psychological_assessment,
-  title = {LLM Psychological Assessment Survey},
+  title = {LLM Psychological Assessment Survey by J.E. Van Clief},
   year = {2024},
-  url = {https://github.com/yourusername/gpt-metrics}
+  url = {https://github.com/RinDig/gpt-metrics}
 }
 ```
 
